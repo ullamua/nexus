@@ -29,7 +29,7 @@ curl http://localhost:8080/health
 curl http://localhost:8080/registry
 curl -X POST http://localhost:8080/call \
   -H "Content-Type: application/json" \
-  -d '{"connector":"connector-name","action":"trending","params":{}}'
+  -d '{"connector":"connector-name","action":"action-name","params":{}}'
 ```
 
 ## Make targets
