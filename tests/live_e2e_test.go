@@ -5,8 +5,8 @@
 //
 // These tests require outbound internet access and will make real HTTP calls
 // to the two live API endpoints:
-//   - https://animetsu-api-production.up.railway.app
-//   - https://api-test-buddy-production.up.railway.app
+//   - https://your-animetsu-api-url
+//   - https://your-animekai-api-url
 
 package tests
 
