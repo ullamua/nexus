@@ -1,0 +1,113 @@
+name: animetsu
+version: "1.0.0"
+description: >
+  Animetsu API — anime catalogue, seasonal data, search, episodes, and streaming.
+  Backed by AniList metadata. No auth required.
+protocol: rest
+base_url: https://your-animetsu-api-url
+
+auth:
+  type: none
+
+timeout_ms: 12000
+
+headers:
+  Accept: application/json
+
+actions:
+  health:
+    method: GET
+    path: /healthz
+    description: Ping the API and confirm it is alive.
+    cache: true
+    cache_ttl_seconds: 30
+
+  home:
+    method: GET
+    path: /api/home
+    description: >
+      Seasonal spotlight — returns arrays of seasonal, trending, recent, and
+      scheduled anime for the current season.
+    response_root: data
+    cache: true
+    cache_ttl_seconds: 300
+
+  trending:
+    method: GET
+    path: /api/trending
+    description: Currently trending anime list.
+    response_root: data
+    cache: true
+    cache_ttl_seconds: 300
+
+  recent:
+    method: GET
+    path: /api/recent
+    description: Most recently aired episodes, paginated.
+    query_params:
+      page: "{{params.page}}"
+    response_root: data
+    cache: true
+    cache_ttl_seconds: 60
+
+  schedule:
+    method: GET
+    path: /api/schedule
+    description: Airing schedule for the current week.
+    response_root: data
+    cache: true
+    cache_ttl_seconds: 600
+
+  search:
+    method: GET
+    path: /api/search
+    description: Full-text search across all anime titles.
+    query_params:
+      q: "{{params.q}}"
+    response_root: data
+    cache: true
+    cache_ttl_seconds: 120
+
+  anime_detail:
+    method: GET
+    path: /api/anime/{{params.id}}
+    description: >
+      Full metadata for a single anime by its internal Nexus/AniList ID.
+      Returns title, cover, description, genres, score, studios, episodes count, etc.
+    response_root: data
+    cache: true
+    cache_ttl_seconds: 3600
+
+  episodes:
+    method: GET
+    path: /api/anime/{{params.id}}/episodes
+    description: Episode list for a given anime ID. Includes episode metadata and filler flags.
+    response_root: data
+    cache: true
+    cache_ttl_seconds: 300
+
+  servers:
+    method: GET
+    path: /api/anime/{{params.id}}/servers/{{params.ep}}
+    description: Available streaming servers for a specific episode number.
+    cache: false
+
+  watch:
+    method: GET
+    path: /api/anime/{{params.id}}/watch/{{params.ep}}
+    description: Streaming sources for a specific episode. Returns HLS URLs.
+    query_params:
+      server: "{{params.server}}"
+      source_type: "{{params.source_type}}"
+    cache: false
+
+  watch_by_ids:
+    method: GET
+    path: /api/watch
+    description: Alternate watch endpoint — fetch by anime ID and episode number.
+    query_params:
+      id: "{{params.id}}"
+      ep: "{{params.ep}}"
+      server: "{{params.server}}"
+      source_type: "{{params.source_type}}"
+    cache: false

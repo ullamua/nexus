@@ -1,0 +1,93 @@
+name: animekai
+version: "1.0.0"
+description: >
+  AnimeKai API — scraper-backed anime catalogue, search, episode, and server data.
+  Open API, no authentication required.
+  Live at: https://your-kai-api-url
+protocol: rest
+base_url: https://your-kai-api-url
+
+auth:
+  type: none
+
+timeout_ms: 12000
+
+headers:
+  Accept: application/json
+
+actions:
+  trending:
+    method: GET
+    path: /trending
+    description: Currently trending anime. Returns id, title, jpTitle, thumbnail, url.
+    query_params:
+      page: "{{params.page}}"
+    response_root: results
+    cache: true
+    cache_ttl_seconds: 300
+
+  latest:
+    method: GET
+    path: /latest
+    description: Latest anime updates, paginated.
+    query_params:
+      page: "{{params.page}}"
+    response_root: results
+    cache: true
+    cache_ttl_seconds: 60
+
+  search:
+    method: GET
+    path: /search
+    description: Search anime by keyword with optional filters.
+    query_params:
+      keyword: "{{params.keyword}}"
+      page: "{{params.page}}"
+    response_root: results
+    cache: true
+    cache_ttl_seconds: 120
+
+  filters:
+    method: GET
+    path: /filters
+    description: Available filter options (type, genre, status, season, year, language, sort).
+    cache: true
+    cache_ttl_seconds: 3600
+
+  details:
+    method: GET
+    path: /details
+    description: >
+      Full metadata for one anime. Pass the slug-style id such as
+      "watch/one-piece-dk6r" (obtained from search/trending results).
+    query_params:
+      id: "{{params.id}}"
+    cache: true
+    cache_ttl_seconds: 3600
+
+  episodes:
+    method: GET
+    path: /episodes
+    description: >
+      Episode list for an anime. Pass the same slug-style id used in details.
+      Returns episodes with episode token required for server lookup.
+    query_params:
+      id: "{{params.id}}"
+    response_root: episodes
+    cache: true
+    cache_ttl_seconds: 300
+
+  servers:
+    method: GET
+    path: /servers/{{params.episode_token}}
+    description: >
+      Available streaming servers for an episode. Pass the episode token from the
+      episodes action. Returns a list of server objects with server IDs.
+    cache: false
+
+  sources:
+    method: GET
+    path: /sources/{{params.server_id}}
+    description: >
+      Video sources for a given server. Returns HLS/MP4 URLs and subtitles.
+    cache: false

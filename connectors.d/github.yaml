@@ -1,0 +1,65 @@
+name: github
+version: "1.0.0"
+description: GitHub REST API connector
+protocol: rest
+base_url: https://api.github.com
+
+auth:
+  type: bearer
+  env: GITHUB_TOKEN
+
+rate_limit:
+  requests_per_second: 10
+  burst: 5
+
+timeout_ms: 10000
+
+headers:
+  Accept: application/vnd.github+json
+  X-GitHub-Api-Version: "2022-11-28"
+
+actions:
+  get_user:
+    method: GET
+    path: /users/{{params.username}}
+    description: Retrieve a GitHub user's public profile
+    input_schema:
+      username:
+        type: string
+        required: true
+    output_map:
+      id: user_id
+      login: username
+      name: display_name
+      email: email
+      avatar_url: avatar_url
+    cache: true
+    cache_ttl_seconds: 300
+
+  list_repos:
+    method: GET
+    path: /users/{{params.username}}/repos
+    description: List public repositories for a user
+    input_schema:
+      username:
+        type: string
+        required: true
+      per_page:
+        type: integer
+        required: false
+    cache: true
+    cache_ttl_seconds: 60
+
+  get_repo:
+    method: GET
+    path: /repos/{{params.owner}}/{{params.repo}}
+    description: Get details of a specific repository
+    input_schema:
+      owner:
+        type: string
+        required: true
+      repo:
+        type: string
+        required: true
+    cache: true
+    cache_ttl_seconds: 120

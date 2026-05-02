@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: nexus
+    runtime: docker
+    dockerfilePath: ./deploy/Dockerfile
+    plan: starter
+    healthCheckPath: /health
+    envVars:
+      - key: NEXUS_PORT
+        value: 10000
+      - key: NEXUS_LOG_LEVEL
+        value: info
+      - key: NEXUS_CONNECTORS_DIR
+        value: /connectors.d
+      - key: NEXUS_VAULT_KEY
+        sync: false
+      - key: NEXUS_ADMIN_KEY
+        sync: false

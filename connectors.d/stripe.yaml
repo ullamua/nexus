@@ -1,0 +1,61 @@
+name: stripe
+version: "1.0.0"
+description: Stripe payment processing API
+protocol: rest
+base_url: https://api.stripe.com/v1
+
+auth:
+  type: bearer
+  env: STRIPE_SECRET_KEY
+
+rate_limit:
+  requests_per_second: 100
+  burst: 20
+
+timeout_ms: 10000
+
+headers:
+  Stripe-Version: "2024-06-20"
+  Content-Type: application/x-www-form-urlencoded
+
+actions:
+  create_customer:
+    method: POST
+    path: /customers
+    description: Create a new Stripe customer
+    input_schema:
+      email:
+        type: string
+        required: true
+      name:
+        type: string
+        required: false
+    output_map:
+      id: customer_id
+      email: email
+    cache: false
+
+  get_customer:
+    method: GET
+    path: /customers/{{params.customer_id}}
+    description: Retrieve a customer by ID
+    input_schema:
+      customer_id:
+        type: string
+        required: true
+    cache: true
+    cache_ttl_seconds: 60
+
+  list_customers:
+    method: GET
+    path: /customers
+    description: List all customers with optional pagination
+    input_schema:
+      limit:
+        type: integer
+        required: false
+      starting_after:
+        type: string
+        required: false
+    cache: true
+    cache_ttl_seconds: 30

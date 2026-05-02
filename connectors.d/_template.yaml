@@ -1,0 +1,60 @@
+name: my_api
+version: "1.0.0"
+description: Short description of what this API does
+protocol: rest         # rest | graphql | grpc | custom
+base_url: https://api.example.com/v1
+
+auth:
+  type: bearer          # bearer | api_key | basic | oauth2 | custom | none
+  env: MY_API_KEY       # name of env var holding the credential — never hardcode values here
+
+rate_limit:
+  requests_per_second: 50
+  burst: 10
+
+timeout_ms: 8000
+
+headers:
+  Content-Type: application/json
+
+actions:
+  get_resource:
+    method: GET
+    path: /resource/{{params.id}}
+    description: Retrieve a resource by ID
+    input_schema:
+      id:
+        type: string
+        required: true
+    output_map:
+      upstream_field_name: normalized_field_name
+    cache: false
+
+  create_resource:
+    method: POST
+    path: /resource
+    description: Create a new resource
+    input_schema:
+      name:
+        type: string
+        required: true
+      type:
+        type: string
+        required: false
+    output_map:
+      id: resource_id
+    cache: false
+
+  list_resources:
+    method: GET
+    path: /resource
+    description: List all resources with optional filtering
+    input_schema:
+      limit:
+        type: integer
+        required: false
+      page:
+        type: integer
+        required: false
+    cache: true
+    cache_ttl_seconds: 30
