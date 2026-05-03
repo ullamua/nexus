@@ -3,8 +3,7 @@ _____   ______________  ______  _________
 ___  | / /__  ____/_  |/ /_  / / /_  ___/
 __   |/ /__  __/  __    /_  / / /_____ \ 
 _  /|  / _  /___  _    | / /_/ / ____/ / 
-/_/ |_/  /_____/  /_/|_| \____/  /____/  
-                                         
+/_/ |_/  /_____/  /_/|_| \____/  /____/                                  
 </pre>
 
 Nexus is a self-hosted middleware layer that connects any HTTP or gRPC API and exposes all of them through a single consistent endpoint. Drop a YAML file per API, run `make run`, and every connector is immediately callable through `POST /call`.
